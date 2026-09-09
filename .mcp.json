@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "mt5-readonly": {
+      "command": ".venv/Scripts/python.exe",
+      "args": ["mcp/server.py"],
+      "env": {}
+    }
+  }
+}

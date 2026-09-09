@@ -104,17 +104,37 @@ seven tools work normally.
 
 ## 9. Wire the MCP server into your AI agent
 
-```powershell
-claude mcp add mt5-readonly -- C:\path\to\ai-forex-trader\.venv\Scripts\python.exe C:\path\to\ai-forex-trader\mcp\server.py
+**In VSCode (or any Claude Code session opened at the repo root)** this is
+already done — `.mcp.json` in the project root declares the server:
+
+```json
+{
+  "mcpServers": {
+    "mt5-readonly": {
+      "command": ".venv/Scripts/python.exe",
+      "args": ["mcp/server.py"]
+    }
+  }
+}
 ```
 
-Use the venv's `python.exe` explicitly — the system Python won't have
-`MetaTrader5` installed, and the server will fall back to mock data or fail
-to start.
+Claude Code detects it on first open and asks you to approve the project's
+MCP servers. Say yes, then run `/mcp` and confirm `mt5-readonly` is
+connected with 8 tools.
 
-Then run `/mcp` inside Claude Code and confirm `mt5-readonly` is connected
-with 8 tools listed. For Codex or another MCP client, point it at the same
-command via that client's MCP config.
+The paths are relative to the repo root and point at the venv's
+`python.exe` deliberately — the system Python has no `MetaTrader5`, so the
+server would fail to start or silently serve mock data.
+
+If the relative path doesn't resolve in your setup, register it explicitly
+with absolute paths instead:
+
+```powershell
+claude mcp add mt5-readonly -- C:\path\to\Kings-TradingBot\.venv\Scripts\python.exe C:\path\to\Kings-TradingBot\mcp\server.py
+```
+
+For Codex or another MCP client, point it at the same command via that
+client's own config.
 
 ## 10. First three tests (PRD section 39)
 
