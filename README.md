@@ -11,9 +11,15 @@ Implemented so far:
 - `mcp/mt5_client.py` — MT5 client interface, with a `MockMT5Client` (fake
   data, runs anywhere) and a `RealMT5Client` (wraps the official
   `MetaTrader5` package, Windows-only).
-- `mcp/server.py` — MCP server exposing 7 **read-only** tools: `get_account`,
+- `mcp/calendar_source.py` — economic calendar interface, with a
+  `MockCalendarSource` and a `CsvCalendarSource` that reads the export from
+  `mql5/CalendarExporter.mq5`.
+- `mql5/CalendarExporter.mq5` — EA that dumps MT5's built-in economic
+  calendar to CSV, because the Python `MetaTrader5` package doesn't expose
+  it. Read-only; never trades. See `docs/CALENDAR.md`.
+- `mcp/server.py` — MCP server exposing 8 **read-only** tools: `get_account`,
   `get_symbol_info`, `get_tick`, `get_rates`, `get_positions`, `get_orders`,
-  `get_trade_history`.
+  `get_trade_history`, `get_calendar_events`.
 
 **No trading tools exist yet.** They come after the risk engine (see
 `docs/TRADING_MODES.md`) and only against a DEMO account.
@@ -51,5 +57,7 @@ See `docs/SETUP.md` for the full EliteBook walkthrough. Summary:
 - `docs/SETUP.md` — EliteBook / Windows setup walkthrough
 - `docs/ARCHITECTURE.md` — system design
 - `docs/SECURITY.md` — credential handling
+- `docs/CALENDAR.md` — economic calendar: why not ForexFactory, how the MQL5
+  bridge works, and the banked news blackout rule
 - `docs/TRADING_MODES.md` — READ_ONLY / CONFIRMATION / AUTONOMOUS and how
   trading tools get added

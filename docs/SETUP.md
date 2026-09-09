@@ -87,11 +87,35 @@ npx @modelcontextprotocol/inspector --cli python mcp\server.py --method tools/ca
 You should see your **real** Exness balance, equity, and server name back —
 not the `MOCK-SERVER` values you saw on the Mac.
 
-## 8. First three tests (PRD section 39)
+## 8. Set up the economic calendar (optional but recommended)
 
-Once the MCP server is wired into your AI agent (Claude Code/Codex) on this
-machine, run these prompts and confirm each one is backed by real MT5 data
-(check the `source`/`timestamp` fields in the tool output):
+MT5 ships an economic calendar that the Python package can't reach. To
+expose it as a tool, install `mql5/CalendarExporter.mq5` — full walkthrough
+in `docs/CALENDAR.md`, including the timezone verification step you should
+not skip.
+
+If you skip this, `get_calendar_events` returns a clear error and the other
+seven tools work normally.
+
+## 9. Wire the MCP server into your AI agent
+
+```powershell
+claude mcp add mt5-readonly -- C:\path\to\ai-forex-trader\.venv\Scripts\python.exe C:\path\to\ai-forex-trader\mcp\server.py
+```
+
+Use the venv's `python.exe` explicitly — the system Python won't have
+`MetaTrader5` installed, and the server will fall back to mock data or fail
+to start.
+
+Then run `/mcp` inside Claude Code and confirm `mt5-readonly` is connected
+with 8 tools listed. For Codex or another MCP client, point it at the same
+command via that client's MCP config.
+
+## 10. First three tests (PRD section 39)
+
+With the MCP server wired in, run these prompts and confirm each one is
+backed by real MT5 data (check the `source`/`timestamp` fields in the tool
+output):
 
 1. "Give me my Exness account balance, equity, free margin, and current open
    positions."

@@ -20,10 +20,26 @@
   `streamable-http` transport without a specific reason and matching
   authentication.
 
+## Third-party data
+
+- The economic calendar comes from **MT5's own built-in calendar**, via
+  `mql5/CalendarExporter.mq5`. We deliberately do not scrape ForexFactory
+  or use a community scraper for it — no public API exists, scraping likely
+  breaches their terms, and an unmaintained scraper is a poor dependency for
+  a system that will size real positions. Reasoning in `docs/CALENDAR.md`.
+- The only file crossing into Python from outside the process is that
+  calendar CSV. It's written by our own EA, inside the terminal's data
+  folder, on the same machine. `CsvCalendarSource` still validates every row
+  and refuses stale files rather than trusting it blindly.
+
 ## What's NOT built yet (so don't assume it's covered)
 
 - No trading tools exist, so there's no order-execution attack surface yet.
 - No database yet — nothing is persisted outside the running process.
 - No dashboard/API yet — nothing is web-exposed.
+- **Prompt-injection is not addressed.** It doesn't bite today (read-only
+  tools, no execution path), but the moment a trading tool exists the agent
+  will be reading market data, calendar text and possibly news, then acting
+  with real money. Threat-model that before Stage 3, not after.
 
 Update this file as each of those gets added.

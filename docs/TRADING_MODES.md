@@ -6,10 +6,15 @@ yet.
 
 ## READ_ONLY (current, and default)
 
-The AI can call any of the 7 tools in `mcp/server.py`: account, symbol,
-tick, candles, positions, orders, history. There is no tool that places,
-modifies, or closes anything. This is enforced by omission — the tools
-literally don't exist — not by a flag the AI could talk its way around.
+The AI can call any of the 8 tools in `mcp/server.py`: account, symbol,
+tick, candles, positions, orders, history, calendar events. There is no
+tool that places, modifies, or closes anything. This is enforced by
+omission — the tools literally don't exist — not by a flag the AI could
+talk its way around.
+
+The same applies on the MQL5 side: `mql5/CalendarExporter.mq5` reads the
+terminal's calendar and writes a CSV. Its `OnTick()` is deliberately empty
+and it never touches an order.
 
 ## CONFIRMATION (not yet built)
 
@@ -26,7 +31,8 @@ the AI proposes, the risk engine decides, the execution layer only acts on
 
 Requires, before this is enabled at all:
 - A tested risk engine (position sizing, daily loss limit, drawdown limit,
-  max positions, stop-loss requirement).
+  max positions, stop-loss requirement, news blackout — see
+  `docs/CALENDAR.md`).
 - Demo account validation over a real time period, not just unit tests.
 - `TRADING_MODE` and `AUTONOMOUS_TRADING` set by explicit manual config
   change — the agent itself must never be able to flip these.

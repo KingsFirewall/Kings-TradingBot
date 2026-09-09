@@ -6,18 +6,30 @@ AI Agent (Claude Code / Codex)
         ▼
 mcp/server.py            — tool definitions, no business logic
         │
-        ▼
-mcp/mt5_client.py        — MT5Client interface
+        ├── mcp/mt5_client.py       — MT5Client interface
+        │       ├── MockMT5Client      — fixed fake data, runs on any OS
+        │       └── RealMT5Client      — official MetaTrader5 package, Windows-only
         │
-        ├── MockMT5Client   — fixed fake data, runs on any OS
-        └── RealMT5Client   — wraps official MetaTrader5 package, Windows-only
-                │
-                ▼
-        MT5 terminal (logged into Exness)
-                │
-                ▼
-              Exness
+        └── mcp/calendar_source.py  — CalendarSource interface
+                ├── MockCalendarSource — sample events, runs on any OS
+                └── CsvCalendarSource  — reads mql5/CalendarExporter.mq5 output
+                        │
+                        ▼
+                MT5 terminal (logged into Exness)
+                        │
+                        ▼
+                      Exness
 ```
+
+## Why the calendar takes a different path
+
+The Python `MetaTrader5` package exposes prices, symbols, orders, positions
+and history — but no calendar function at all. MT5's economic calendar is
+reachable only from MQL5. So `CalendarExporter.mq5` runs inside the terminal
+and writes a CSV that `CsvCalendarSource` reads. It is the one place where
+data crosses a file boundary rather than a function call, which is why the
+exporter writes atomically and the reader refuses stale files. Full
+rationale in `docs/CALENDAR.md`.
 
 ## Why the client is split into an interface + two implementations
 
