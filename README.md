@@ -24,33 +24,43 @@ Implemented so far:
 **No trading tools exist yet.** They come after the risk engine (see
 `docs/TRADING_MODES.md`) and only against a DEMO account.
 
-## Quickstart (this machine — mock mode)
+## Quickstart (Windows — the trading machine)
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
+MT5 runs on Windows only, so that's where this project runs. Full
+walkthrough in `docs/SETUP.md`; the short version, in PowerShell:
+
+```powershell
+git clone https://github.com/KingsFirewall/Kings-TradingBot.git
+cd Kings-TradingBot
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env        # MT5_CLIENT_MODE=mock by default
-python -m pytest tests/ -v
+copy .env.example .env
+python -m pytest tests\ -v
 ```
 
-Inspect the live tool list over real MCP stdio:
+That runs against mock data and needs no MT5. To point it at your live
+Exness account, set `MT5_CLIENT_MODE=real` in `.env` with the MT5 terminal
+open and logged in, then:
 
-```bash
-npx @modelcontextprotocol/inspector --cli python mcp/server.py --method tools/list
+```powershell
+python mcp\server.py
 ```
 
-## Running against real Exness data (Windows only)
+Inspect the live tool list over real MCP stdio (needs Node.js):
 
-See `docs/SETUP.md` for the full EliteBook walkthrough. Summary:
+```powershell
+npx @modelcontextprotocol/inspector --cli python mcp\server.py --method tools/list
+```
 
-1. Install MT5, log into your Exness account in the terminal itself (never
-   store the password in this repo).
-2. Install Windows Python 3.10+, `pip install -r requirements.txt`, then
-   `pip install MetaTrader5` (Windows-only package, commented out of
-   `requirements.txt` for that reason).
-3. Set `MT5_CLIENT_MODE=real` in `.env`.
-4. `python mcp/server.py`
+## Why there's still a mock
+
+`MockMT5Client` and `MockCalendarSource` aren't a second-OS workaround —
+they're what makes the test suite fast, deterministic, and runnable without
+the terminal open and logged in. Tests that depend on a live broker
+connection fail for reasons that have nothing to do with your code. The real
+clients are exercised on the trading machine; the mocks pin the contract
+they have to satisfy.
 
 ## Docs
 

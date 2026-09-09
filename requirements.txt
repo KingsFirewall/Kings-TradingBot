@@ -1,4 +1,3 @@
-# Cross-platform — installs on this Mac for dev/testing with the mock client.
 # Pin to the 2.x line: this project uses mcp.server.mcpserver.MCPServer (the
 # renamed FastMCP API introduced in mcp 2.0). See docs/ARCHITECTURE.md if you
 # upgrade — the tool decorators are the only coupling to this API.
@@ -7,6 +6,7 @@ python-dotenv>=1.0.1
 pydantic>=2.7
 pytest>=8.0
 
-# Windows-only — install this on the EliteBook (or any Windows box running MT5).
-# Do NOT try to install this on macOS/Linux, it will fail (no wheel available).
-# MetaTrader5>=5.0.45; sys_platform == "win32"
+# The real MT5 client. The environment marker means pip installs it on Windows
+# and silently skips it everywhere else, so a single
+# `pip install -r requirements.txt` is all you need on the trading machine.
+MetaTrader5>=5.0.45; sys_platform == "win32"

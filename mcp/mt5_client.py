@@ -4,8 +4,10 @@ MT5 client abstraction.
 MT5Client is the interface the MCP server talks to. RealMT5Client wraps the
 official `MetaTrader5` package and only works on Windows with a running,
 logged-in MT5 terminal. MockMT5Client returns fixed sample data so the rest
-of the stack (MCP server, tests, future risk engine) can be built and tested
-on any machine before real MT5 access exists.
+of the stack (MCP server, tests, future risk engine) has a fast,
+deterministic target that doesn't depend on a live broker connection —
+tests that need the terminal open and logged in fail for reasons that have
+nothing to do with the code under test.
 
 Read-only for now: no order placement here. Trading tools come in a later
 stage per the PRD, after the risk engine exists.

@@ -50,10 +50,10 @@ mcp/server.py get_calendar_events   — read-only MCP tool #8
 ```
 
 Same interface/mock/real split as `mt5_client.py`, for the same reason: the
-news blackout rule in `risk/` can be built and tested on the Mac before any
-of this touches a live terminal.
+news blackout rule in `risk/` gets a fast, deterministic test suite that
+doesn't need the terminal open, logged in, and mid-trading-session.
 
-## Setup on the EliteBook
+## Setup
 
 1. **Confirm the calendar is populated.** In MT5: View → Toolbox → Calendar.
    If it is empty, the terminal has not downloaded it yet — leave the

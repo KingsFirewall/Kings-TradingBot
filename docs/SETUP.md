@@ -29,24 +29,28 @@ python.exe to PATH" during install. Verify:
 python --version
 ```
 
-## 3. Copy this repo to the EliteBook
+## 3. Clone the repo
 
-Easiest: `git clone` it there once it has a remote, or copy the folder via
-USB/network share for now.
+```powershell
+git clone https://github.com/KingsFirewall/Kings-TradingBot.git
+cd Kings-TradingBot
+```
+
+It's a private repo, so you'll authenticate. Cleanest is `winget install
+GitHub.cli` then `gh auth login` (GitHub.com → HTTPS → Yes → browser) —
+after that both `git clone` and `git push` just work, with no token to
+paste or rotate.
 
 ## 4. Install dependencies
 
 ```powershell
-cd ai-forex-trader
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-pip install MetaTrader5
 ```
 
-`MetaTrader5` is commented out of `requirements.txt` because it has no macOS
-build and would fail `pip install` on the Mac dev machine — install it
-explicitly here.
+That includes `MetaTrader5` — it carries a `sys_platform == "win32"` marker,
+so it installs here and is skipped on other platforms. No separate step.
 
 ## 5. Configure
 
@@ -85,7 +89,8 @@ npx @modelcontextprotocol/inspector --cli python mcp\server.py --method tools/ca
 ```
 
 You should see your **real** Exness balance, equity, and server name back —
-not the `MOCK-SERVER` values you saw on the Mac.
+not the `MOCK-SERVER` placeholder values that `MT5_CLIENT_MODE=mock`
+returns.
 
 ## 8. Set up the economic calendar (optional but recommended)
 
